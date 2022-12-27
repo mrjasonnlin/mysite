@@ -13,22 +13,24 @@ import os
 
 from pathlib import Path
 
-from dotenv import load_dotenv
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('django-insecure-zxd^#vfs6*ubaw!rnpnk=o7uvyl30)oe7mb&45fdno&8f2%uv&')
+SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-zxd^#vfs6*ubaw!rnpnk=o7uvyl30)oe7mb&45fdno&8f2%uv&')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
+DEBUG = 'RENDER' not in os.environ
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
+ALLOWED_HOSTS = []
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -77,8 +79,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
-}
+    'default': dj_database_url.config(default='postgres://blog_76vf_user:w3phXO95ZMzkdyOr5VW3fzypEZr2WLDd@dpg-cel3rshgp3jlcsmpkjb0-a/blog_76vf', conn_max_age=600)}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
