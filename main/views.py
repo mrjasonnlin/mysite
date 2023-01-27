@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls.base import reverse
+from account.models import User
 
 
 def index(request):
     """
     Render the main page
     """
-#    return render(request, 'main/main.html', {})
+    #    return render(request, 'main/main.html', {})
 
     context = {'like': 'Django 很棒'}
     return render(request, 'main/main.html', context)
@@ -43,3 +44,9 @@ def admin_required(func):
         return func(request, *args, **kwargs)
 
     return auth
+
+
+def users(request):
+    users = User.objects.all()
+
+    return render(request, 'main/users.html', {'users': users})
